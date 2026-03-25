@@ -40,7 +40,7 @@ COSMOCHAOS is a fun, interactive age calculator that tells you:
 
 ## 🛸 Live Demo
 
-👉 **[Try it here](https://yourusername.github.io/cosmochaos/)**
+👉 **[Try it here]( https://sherin-t17.github.io/cosmochaos/)**
 
 ---
 
