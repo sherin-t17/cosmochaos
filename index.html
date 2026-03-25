@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COSMOCHAOS</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- BACKGROUND LAYERS -->
+<canvas id="space"></canvas>
+<div id="nebula"></div>
+
+<!-- PARTICLE BURST CANVAS -->
+<canvas id="burstCanvas"></canvas>
+
+<!-- FLOATING CONTROLS -->
+<div id="floatingControls">
+  <button id="musicBtn" class="float-btn" title="Toggle Music">🔇</button>
+  <button id="themeBtn" class="float-btn" title="Switch Theme">🎨</button>
+</div>
+
+<!-- THEME PANEL -->
+<div id="themePanel" class="hidden">
+  <div class="theme-option active" data-theme="default">🟣 Default</div>
+  <div class="theme-option" data-theme="solar">🔴 Solar Flare</div>
+  <div class="theme-option" data-theme="nebula">🟢 Nebula Green</div>
+  <div class="theme-option" data-theme="pink">🩷 Galaxy Pink</div>
+  <div class="theme-option" data-theme="ocean">🔵 Deep Ocean</div>
+</div>
+
+<!-- WARP TRANSITION -->
+<div id="warp">
+  <canvas id="warpCanvas"></canvas>
+  <div class="warp-text">NAVIGATING SPACE-TIME...</div>
+</div>
+
+<!-- PAGE 1: LANDING -->
+<section id="page1" class="page">
+  <div class="glass anim-card">
+    <div class="logo-glow" id="logoGlow">COSMOCHAOS</div>
+    <p id="greeting" class="subtitle"></p>
+    <button id="startBtn" class="btn-primary pulse-btn">
+      <span class="btn-icon">🚀</span> START COSMIC SCAN
+    </button>
+  </div>
+</section>
+
+<!-- PAGE 2: DOB INPUT -->
+<section id="page2" class="page hidden">
+  <div class="glass anim-card">
+    <h2 class="page-title">COSMIC IDENTITY</h2>
+    <p class="page-sub">The universe needs your origin data</p>
+    <div class="input-wrapper">
+      <input type="text" id="userName" placeholder="Your cosmic name (optional)" maxlength="20" autocomplete="off">
+    </div>
+    <div class="input-wrapper" style="margin-top:14px;">
+      <input type="date" id="dob">
+    </div>
+    <p id="warning"></p>
+    <button id="calcBtn" class="btn-primary hidden">
+      <span class="btn-icon">⚡</span> CALCULATE COSMIC AGE
+    </button>
+  </div>
+</section>
+
+<!-- PAGE 3: RESULT -->
+<section id="page3" class="page hidden">
+  <div id="card" class="glass result-card anim-card">
+    <div class="card-header">
+      <span id="userBadge" class="user-badge"></span>
+    </div>
+    <div class="stat-block">
+      <div class="stat-card glass-stat">
+        <span class="stat-emoji">🌀</span>
+        <h3 id="ageYears" class="stat-num"></h3>
+        <span class="stat-label">YEARS</span>
+      </div>
+      <div class="stat-card glass-stat">
+        <span class="stat-emoji">📅</span>
+        <h3 id="ageDays" class="stat-num"></h3>
+        <span class="stat-label">DAYS</span>
+      </div>
+    </div>
+    <div class="msg-box">
+      <span class="quote-mark">"</span>
+      <p id="message"></p>
+      <span class="quote-mark close-quote">"</span>
+    </div>
+    <div id="factsBox" class="facts-box hidden">
+      <div class="facts-title">🌍 BORN IN <span id="birthYearLabel"></span></div>
+      <div id="factsList" class="facts-list"></div>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="shareBtn" class="btn-primary ripple">🌐 SHARE CHAOS</button>
+    <button id="copyBtn" class="btn-secondary ripple">🔗 COPY LINK</button>
+    <button id="downloadBtn" class="btn-secondary ripple">📸 SAVE CARD</button>
+    <button id="retryBtn" class="btn-ghost">↩ TRY AGAIN</button>
+  </div>
+</section>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
