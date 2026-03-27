@@ -5,21 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COSMOCHAOS</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- BACKGROUND LAYERS -->
+<!-- BACKGROUND -->
 <canvas id="space"></canvas>
 <div id="nebula"></div>
-
-<!-- PARTICLE BURST CANVAS -->
 <canvas id="burstCanvas"></canvas>
 
 <!-- FLOATING CONTROLS -->
 <div id="floatingControls">
-  <button id="musicBtn" class="float-btn" title="Toggle Music">🔇</button>
-  <button id="themeBtn" class="float-btn" title="Switch Theme">🎨</button>
+  <button id="musicBtn" class="float-btn">🔇</button>
+  <button id="themeBtn" class="float-btn">🎨</button>
 </div>
 
 <!-- THEME PANEL -->
@@ -31,24 +30,24 @@
   <div class="theme-option" data-theme="ocean">🔵 Deep Ocean</div>
 </div>
 
-<!-- WARP TRANSITION -->
+<!-- WARP -->
 <div id="warp">
   <canvas id="warpCanvas"></canvas>
   <div class="warp-text">NAVIGATING SPACE-TIME...</div>
 </div>
 
-<!-- PAGE 1: LANDING -->
-<section id="page1" class="page">
-  <div class="glass anim-card">
+<!-- PAGE 1: LANDING — open space, no card -->
+<section id="page1" class="page landing-page">
+  <div class="landing-content">
     <div class="logo-glow" id="logoGlow">COSMOCHAOS</div>
     <p id="greeting" class="subtitle"></p>
     <button id="startBtn" class="btn-primary pulse-btn">
-      <span class="btn-icon">🚀</span> START COSMIC SCAN
+      🚀 START COSMIC SCAN
     </button>
   </div>
 </section>
 
-<!-- PAGE 2: DOB INPUT -->
+<!-- PAGE 2: INPUT -->
 <section id="page2" class="page hidden">
   <div class="glass anim-card">
     <h2 class="page-title">COSMIC IDENTITY</h2>
@@ -57,54 +56,129 @@
       <input type="text" id="userName" placeholder="Your cosmic name (optional)" maxlength="20" autocomplete="off">
     </div>
     <div class="input-wrapper" style="margin-top:14px;">
-      <input type="date" id="dob">
+      <input type="text" id="dob" placeholder="Select your birth date" readonly>
     </div>
     <p id="warning"></p>
     <button id="calcBtn" class="btn-primary hidden">
-      <span class="btn-icon">⚡</span> CALCULATE COSMIC AGE
+      ⚡ CALCULATE COSMIC AGE
     </button>
   </div>
 </section>
 
 <!-- PAGE 3: RESULT -->
 <section id="page3" class="page hidden">
-  <div id="card" class="glass result-card anim-card">
-    <div class="card-header">
-      <span id="userBadge" class="user-badge"></span>
-    </div>
-    <div class="stat-block">
-      <div class="stat-card glass-stat">
+  <div class="result-wrapper">
+
+    <!-- Badge -->
+    <div id="userBadge" class="user-badge anim-card"></div>
+
+    <!-- Stats -->
+    <div class="stat-block anim-card">
+      <div class="stat-card">
         <span class="stat-emoji">🌀</span>
-        <h3 id="ageYears" class="stat-num"></h3>
-        <span class="stat-label">YEARS</span>
+        <div class="stat-content">
+          <h3 id="ageYears" class="stat-num"></h3>
+          <span class="stat-label">TRIPS AROUND THE SUN</span>
+        </div>
       </div>
-      <div class="stat-card glass-stat">
+      <div class="stat-card">
         <span class="stat-emoji">📅</span>
-        <h3 id="ageDays" class="stat-num"></h3>
-        <span class="stat-label">DAYS</span>
+        <div class="stat-content">
+          <h3 id="ageDays" class="stat-num"></h3>
+          <span class="stat-label">DAYS ORBITING EARTH</span>
+        </div>
       </div>
     </div>
-    <div class="msg-box">
-      <span class="quote-mark">"</span>
+
+    <!-- Message -->
+    <div class="msg-box anim-card">
       <p id="message"></p>
-      <span class="quote-mark close-quote">"</span>
     </div>
-    <div id="factsBox" class="facts-box hidden">
-      <div class="facts-title">🌍 BORN IN <span id="birthYearLabel"></span></div>
-      <div id="factsList" class="facts-list"></div>
+
+    <!-- Horizontal scroll info cards -->
+    <div class="hscroll-wrap">
+      <div class="hscroll" id="infoCards">
+        <div class="info-card" id="zodiacCard">
+          <div class="info-icon" id="zodiacIcon"></div>
+          <div class="info-label" id="zodiacLabel"></div>
+          <div class="info-line" id="zodiacLine"></div>
+        </div>
+        <div class="info-card" id="personalityCard">
+          <div class="info-icon">🔮</div>
+          <div class="info-label" id="personalityLabel"></div>
+          <div class="info-line" id="personalityLine"></div>
+        </div>
+        <div class="info-card" id="twinCard">
+          <div class="info-icon">🌟</div>
+          <div class="info-label">COSMIC TWIN</div>
+          <div class="info-line" id="twinLine"></div>
+        </div>
+        <div class="info-card" id="bdayCard">
+          <div class="info-icon">🎂</div>
+          <div class="info-label">NEXT BIRTHDAY</div>
+          <div class="info-line" id="bdayLine"></div>
+        </div>
+        <div class="info-card" id="factsCard">
+          <div class="info-icon">🌍</div>
+          <div class="info-label" id="factsLabel"></div>
+          <div class="facts-lines" id="factsList"></div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="actions">
-    <button id="shareBtn" class="btn-primary ripple">🌐 SHARE CHAOS</button>
-    <button id="copyBtn" class="btn-secondary ripple">🔗 COPY LINK</button>
-    <button id="downloadBtn" class="btn-secondary ripple">📸 SAVE CARD</button>
-    <button id="retryBtn" class="btn-ghost">↩ TRY AGAIN</button>
+
+    <!-- Feedback -->
+    <div class="feedback-box anim-card">
+      <div class="feedback-title">HOW WAS YOUR COSMIC SCAN?</div>
+      <div class="star-row" id="starRow">
+        <span class="star" data-val="1">☆</span>
+        <span class="star" data-val="2">☆</span>
+        <span class="star" data-val="3">☆</span>
+        <span class="star" data-val="4">☆</span>
+        <span class="star" data-val="5">☆</span>
+      </div>
+      <div id="feedbackMsgWrap" class="hidden">
+        <textarea id="feedbackMsg" placeholder="Tell the universe something... (optional)" maxlength="200"></textarea>
+        <button id="sendFeedbackBtn" class="btn-secondary">🌌 SEND TO UNIVERSE</button>
+      </div>
+      <p id="feedbackConfirm" class="hidden"></p>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="shareBtn" class="btn-primary ripple">🌐 SHARE CHAOS</button>
+      <button id="copyBtn" class="btn-secondary ripple">🔗 COPY LINK</button>
+      <button id="downloadBtn" class="btn-secondary ripple">📸 SAVE CARD</button>
+      <button id="retryBtn" class="btn-ghost">↩ TRY AGAIN</button>
+    </div>
+
   </div>
 </section>
+
+<!-- CARD PREVIEW MODAL -->
+<div id="cardModal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-title">YOUR GALAXY BRIEF</div>
+    <div class="card-theme-picker">
+      <span class="card-theme-dot active" data-ctheme="default" style="background:linear-gradient(135deg,#7C5CFF,#00E5FF)"></span>
+      <span class="card-theme-dot" data-ctheme="solar"   style="background:linear-gradient(135deg,#FF4500,#FFA500)"></span>
+      <span class="card-theme-dot" data-ctheme="nebula"  style="background:linear-gradient(135deg,#00FF88,#00FFCC)"></span>
+      <span class="card-theme-dot" data-ctheme="pink"    style="background:linear-gradient(135deg,#FF4ECD,#BF00FF)"></span>
+      <span class="card-theme-dot" data-ctheme="ocean"   style="background:linear-gradient(135deg,#00CED1,#7FFFD4)"></span>
+    </div>
+    <div class="card-preview-wrap">
+      <canvas id="previewCanvas"></canvas>
+    </div>
+    <div class="modal-actions">
+      <button id="downloadFinalBtn" class="btn-primary ripple">⬇ DOWNLOAD</button>
+      <button id="closeModalBtn" class="btn-ghost">✕ CLOSE</button>
+    </div>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="script.js"></script>
 </body>
 </html>
