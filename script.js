@@ -698,7 +698,7 @@ function renderPreview(theme){
   pc.width=c.width;pc.height=c.height;pc.getContext("2d").drawImage(c,0,0)
 }
 
-// ─── CARD BUILDER — Bulletproof, system fonts only ───────────
+// ─── CARD BUILDER — Tight layout, no empty space ─────────────
 function buildCard(theme,W,H){
   const canvas=document.createElement("canvas")
   canvas.width=W;canvas.height=H
@@ -719,120 +719,127 @@ function buildCard(theme,W,H){
   bgGrad.addColorStop(0,tc.bg1);bgGrad.addColorStop(0.5,tc.bg2);bgGrad.addColorStop(1,tc.bg1)
   c.fillStyle=bgGrad;c.fillRect(0,0,W,H)
 
-  // Nebula blobs
-  cBlob(c,W*0.1, H*0.1, 350*sc,tc.nb1)
-  cBlob(c,W*0.88,H*0.78,280*sc,tc.nb2)
-  cBlob(c,W*0.5, H*0.5, 200*sc,tc.nb1.replace("0.3","0.08"))
+  // Nebula
+  cBlob(c,W*0.1, H*0.1, 300*sc,tc.nb1)
+  cBlob(c,W*0.88,H*0.82,250*sc,tc.nb2)
+  cBlob(c,W*0.5, H*0.5, 180*sc,tc.nb1.replace("0.3","0.06"))
 
-  // Stars — deterministic so they look the same every time
-  for(let i=0;i<250;i++){
+  // Stars — deterministic
+  for(let i=0;i<220;i++){
     const x=((i*317+i*7)%997)/997*W
     const y=((i*197+i*13)%991)/991*H
-    const r=(((i*7)%3)+0.3)*sc*0.8
-    const a=0.2+((i*31)%10)/10*0.8
+    const r=(((i*7)%3)+0.2)*sc*0.7
+    const a=0.2+((i*31)%10)/10*0.7
     c.beginPath();c.arc(x,y,r,0,Math.PI*2)
     c.fillStyle=`rgba(255,255,255,${a})`;c.fill()
   }
 
-  // Star borders (use simple text, no emoji issues)
-  c.fillStyle=tc.s+"99";c.font=`${20*sc}px Arial,sans-serif`;c.textAlign="center"
-  c.fillText("* . . . . . . . . . . . . . . . . . . . . . *",W/2,55*sc)
-  c.fillText("* . . . . . . . . . . . . . . . . . . . . . *",W/2,H-28*sc)
+  // ── Use a vertical layout engine — track Y position
+  let Y=50*sc
 
-  // COSMOCHAOS title
+  // Top border
+  c.fillStyle=tc.s+"88";c.font=`${18*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.fillText("* . . . . . . . . . . . . . . . . . . . . *",W/2,Y)
+  Y+=50*sc
+
+  // COSMOCHAOS
   c.save()
   const tg=c.createLinearGradient(W*0.15,0,W*0.85,0)
-  tg.addColorStop(0,"#ffffff");tg.addColorStop(0.4,tc.s);tg.addColorStop(1,tc.p)
-  c.fillStyle=tg;c.font=`bold ${90*sc}px Arial,sans-serif`;c.textAlign="center"
-  c.shadowColor=tc.s;c.shadowBlur=40*sc
-  c.fillText("COSMOCHAOS",W/2,172*sc)
+  tg.addColorStop(0,"#fff");tg.addColorStop(0.4,tc.s);tg.addColorStop(1,tc.p)
+  c.fillStyle=tg;c.font=`bold ${82*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.shadowColor=tc.s;c.shadowBlur=35*sc
+  c.fillText("COSMOCHAOS",W/2,Y)
   c.restore()
+  Y+=28*sc
 
-  cDivider(c,W,200*sc,tc.s,sc)
+  cDivider(c,W,Y,tc.s,sc); Y+=28*sc
 
   // Name badge
   const rawBadge=userBadge.innerText||"COSMIC TRAVELER'S GALAXY BRIEF"
   const bText=rawBadge.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu,"").trim()
-  c.save()
-  const bW=820*sc,bH=58*sc,bX=(W-bW)/2,bY=218*sc
-  cRoundRect(c,bX,bY,bW,bH,29*sc)
+  const bW=820*sc,bH=52*sc,bX=(W-bW)/2
+  cRoundRect(c,bX,Y,bW,bH,26*sc)
   c.fillStyle="rgba(255,255,255,0.07)";c.fill()
-  c.strokeStyle=tc.p;c.lineWidth=2*sc;c.shadowColor=tc.p;c.shadowBlur=18*sc;c.stroke()
-  c.fillStyle=tc.s;c.shadowColor=tc.s;c.shadowBlur=12*sc
-  c.font=`bold ${23*sc}px Arial,sans-serif`;c.textAlign="center"
-  c.fillText(bText,W/2,bY+38*sc)
-  c.restore()
+  c.strokeStyle=tc.p;c.lineWidth=1.5*sc;c.shadowColor=tc.p;c.shadowBlur=16*sc;c.stroke()
+  c.fillStyle=tc.s;c.shadowColor=tc.s;c.shadowBlur=10*sc
+  c.font=`bold ${21*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.fillText(bText,W/2,Y+34*sc)
+  Y+=bH+22*sc
 
   // Stat cards side by side
-  const gap=20*sc,sX=60*sc,sY=300*sc,sW=(W-sX*2-gap)/2,sH=108*sc
-  // Left stat
-  cRoundRect(c,sX,sY,sW,sH,16*sc)
+  const gap=16*sc,sX=55*sc,sW=(W-sX*2-gap)/2,sH=96*sc
+  // Left
+  cRoundRect(c,sX,Y,sW,sH,14*sc)
   c.fillStyle="rgba(255,255,255,0.07)";c.fill()
-  c.strokeStyle=tc.p;c.lineWidth=1.5*sc;c.shadowColor=tc.p;c.shadowBlur=20*sc;c.stroke()
-  c.fillStyle="#fff";c.shadowColor=tc.s;c.shadowBlur=10*sc
-  c.font=`bold ${38*sc}px Arial,sans-serif`;c.textAlign="center"
-  c.fillText((ageYears.innerText||"0")+" TRIPS",sX+sW/2,sY+50*sc)
-  c.fillStyle=tc.s+"bb";c.shadowBlur=0;c.font=`${13*sc}px Arial,sans-serif`
-  c.fillText("AROUND THE SUN",sX+sW/2,sY+78*sc)
-  // Right stat
+  c.strokeStyle=tc.p;c.lineWidth=1.5*sc;c.shadowColor=tc.p;c.shadowBlur=18*sc;c.stroke()
+  c.fillStyle="#fff";c.shadowColor=tc.s;c.shadowBlur=8*sc
+  c.font=`bold ${34*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.fillText((ageYears.innerText||"0")+" TRIPS",sX+sW/2,Y+44*sc)
+  c.fillStyle=tc.s+"bb";c.shadowBlur=0;c.font=`${12*sc}px Arial,sans-serif`
+  c.fillText("AROUND THE SUN",sX+sW/2,Y+68*sc)
+  // Right
   const s2X=sX+sW+gap
-  cRoundRect(c,s2X,sY,sW,sH,16*sc)
+  cRoundRect(c,s2X,Y,sW,sH,14*sc)
   c.fillStyle="rgba(255,255,255,0.07)";c.fill()
-  c.strokeStyle=tc.p;c.lineWidth=1.5*sc;c.shadowColor=tc.p;c.shadowBlur=20*sc;c.stroke()
-  c.fillStyle="#fff";c.shadowColor=tc.s;c.shadowBlur=10*sc
-  c.font=`bold ${38*sc}px Arial,sans-serif`;c.textAlign="center"
-  c.fillText((ageDays.innerText||"0")+" DAYS",s2X+sW/2,sY+50*sc)
-  c.fillStyle=tc.s+"bb";c.shadowBlur=0;c.font=`${13*sc}px Arial,sans-serif`
-  c.fillText("ORBITING EARTH",s2X+sW/2,sY+78*sc)
+  c.strokeStyle=tc.p;c.lineWidth=1.5*sc;c.shadowColor=tc.p;c.shadowBlur=18*sc;c.stroke()
+  c.fillStyle="#fff";c.shadowColor=tc.s;c.shadowBlur=8*sc
+  c.font=`bold ${34*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.fillText((ageDays.innerText||"0")+" DAYS",s2X+sW/2,Y+44*sc)
+  c.fillStyle=tc.s+"bb";c.shadowBlur=0;c.font=`${12*sc}px Arial,sans-serif`
+  c.fillText("ORBITING EARTH",s2X+sW/2,Y+68*sc)
+  Y+=sH+22*sc
 
-  cDivider(c,W,438*sc,tc.p,sc)
+  cDivider(c,W,Y,tc.p,sc); Y+=28*sc
 
-  // Message — strip emojis for canvas safety
+  // Message
   const rawMsg=globalData.msgText||"Built different. No updates needed."
   const cleanMsg=rawMsg.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FEFF}]/gu,"").trim()||"Built different. No updates needed."
   c.save()
-  c.fillStyle="rgba(255,255,255,0.95)";c.font=`bold ${32*sc}px Arial,sans-serif`
+  c.fillStyle="rgba(255,255,255,0.95)";c.font=`bold ${30*sc}px Arial,sans-serif`
   c.textAlign="center";c.shadowBlur=0
-  const mLines=wrapText(cleanMsg,42)
-  mLines.slice(0,2).forEach((line,i)=>c.fillText(line.trim(),W/2,(490+i*44)*sc))
+  const mLines=wrapText(cleanMsg,44)
+  mLines.slice(0,2).forEach((line,i)=>{c.fillText(line.trim(),W/2,Y);Y+=40*sc})
   c.restore()
+  Y+=10*sc
 
-  cDivider(c,W,600*sc,tc.s,sc)
+  cDivider(c,W,Y,tc.s,sc); Y+=24*sc
 
   // Zodiac + Personality
-  c.save()
   const zodEl=document.getElementById("zodiacTitle"),perEl=document.getElementById("personalityLabel")
   if(zodEl&&perEl){
     const zt=zodEl.innerText.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu,"").trim()
     const pt=perEl.innerText.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu,"").trim()
-    c.fillStyle=tc.s+"cc";c.font=`${20*sc}px Arial,sans-serif`;c.textAlign="center"
-    c.fillText(zt+"   |   "+pt,W/2,648*sc)
+    c.fillStyle=tc.s+"cc";c.font=`${19*sc}px Arial,sans-serif`;c.textAlign="center"
+    c.fillText(zt+"   |   "+pt,W/2,Y)
+    Y+=32*sc
   }
-  c.restore()
 
   // Birth year fact
-  c.save()
   const factEl=document.querySelector(".fact-line")
   if(factEl&&globalData.birthYear){
-    c.fillStyle=tc.s;c.font=`bold ${16*sc}px Arial,sans-serif`;c.textAlign="center"
-    c.shadowColor=tc.s;c.shadowBlur=8*sc
-    c.fillText("BORN IN "+globalData.birthYear,W/2,690*sc)
+    c.fillStyle=tc.s;c.font=`bold ${15*sc}px Arial,sans-serif`;c.textAlign="center"
+    c.shadowColor=tc.s;c.shadowBlur=7*sc
+    c.fillText("BORN IN "+globalData.birthYear,W/2,Y)
+    Y+=26*sc
     c.fillStyle="rgba(255,255,255,0.72)";c.shadowBlur=0
-    c.font=`${18*sc}px Arial,sans-serif`
-    const ft=factEl.innerText.replace(/[\u{1F300}-\u{1FFFF}]/gu,"").substring(0,60)
-    c.fillText(ft,W/2,718*sc)
+    c.font=`${17*sc}px Arial,sans-serif`
+    const ft=factEl.innerText.replace(/[\u{1F300}-\u{1FFFF}]/gu,"").substring(0,58)
+    c.fillText(ft,W/2,Y)
+    Y+=28*sc
   }
-  c.restore()
 
-  cDivider(c,W,744*sc,tc.p,sc)
+  Y+=8*sc
+  cDivider(c,W,Y,tc.p,sc); Y+=26*sc
 
   // Watermark
-  c.save()
-  c.fillStyle="rgba(255,255,255,0.3)";c.font=`bold ${20*sc}px Arial,sans-serif`;c.textAlign="center"
-  c.fillText("cosmochaos.app",W/2,786*sc)
+  c.fillStyle="rgba(255,255,255,0.3)";c.font=`bold ${19*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.fillText("cosmochaos.app",W/2,Y); Y+=24*sc
   c.fillStyle=tc.s+"55";c.font=`${13*sc}px Arial,sans-serif`
-  c.fillText(window.location.href.substring(0,55),W/2,810*sc)
-  c.restore()
+  c.fillText(window.location.href.substring(0,55),W/2,Y); Y+=30*sc
+
+  // Bottom border
+  c.fillStyle=tc.s+"88";c.font=`${18*sc}px Arial,sans-serif`;c.textAlign="center"
+  c.fillText("* . . . . . . . . . . . . . . . . . . . . *",W/2,Y)
 
   return canvas
 }
